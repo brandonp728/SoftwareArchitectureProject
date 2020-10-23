@@ -1,0 +1,18 @@
+The patch will be in the form of a file communicated over tcp sockets.
+The file will contain attributes that need to be updated, and the individual devices
+retrieve the attributes they care about. The files must simulate both successful and failed patches.
+json formatting will be used.
+
+1 json per patch.
+
+{
+    "x": 11,
+    "y": 20,
+    "algorithm": "x + y"
+}
+
+{
+    "x": 11,
+    "y": 20,
+    "algorithm": "x - y"
+}
