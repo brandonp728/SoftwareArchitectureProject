@@ -16,3 +16,15 @@ json formatting will be used.
     "y": 20,
     "algorithm": "x - y"
 }
+
+Possible communications:
+
+{
+    "status": 100,
+    "device": "HASHCODE",
+    "patch": {
+            "x": 11,
+            "y": 20,
+            "algorithm": "x - y"
+    }
+}

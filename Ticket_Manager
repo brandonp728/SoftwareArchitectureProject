@@ -1,8 +1,5 @@
-public class TicketManager {
-
-     public static void main(String[] args) {
-
     /**
+     * We will be using javascript, nodejs, and rest
      * Pseudo code
      * 
      * This is the sever for the program.
@@ -29,6 +26,3 @@ public class TicketManager {
      *      successful update
      *      failed update
      */
-
-     }
-}

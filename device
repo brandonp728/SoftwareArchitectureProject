@@ -4,7 +4,8 @@ This is the client.
 
 Pseudo Code
 Connect to the socket, wait for a notification
-When notified of a patch, request ticket
-wait for ticket
-when provided a ticket, execute patch
-provide status updates for server
+while alive
+    When notified of a patch, request ticket
+    wait for ticket
+    when provided a ticket, execute patch
+    provide status updates for server
