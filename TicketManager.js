@@ -47,26 +47,29 @@
      */
 class TicketManager {
 
-    WAITING_CODE = 101; //to be used in notifyPatchAvailable()
-    DENIED_CODE = 102;
-    APPROVED_CODE = 103;
-
-    deviceQueue = new Queue();
-    deviceArray = [];  
-    app = express();
-    port = 3055;
     
-    testPatch =  {
-             "x": 11,
-             "y": 20,
-             "algorithm": "x + y"
-         }
-    parsedPatch = JSON.parse(this.testPatch); //recived by the server from the client 
+    
+    // this.testPatch =  {
+    //          "x": 11,
+    //          "y": 20,
+    //          "algorithm": "x + y"
+    //      }
+    // parsedPatch = JSON.parse(this.testPatch); //recived by the server from the client 
 
 
     constructor(portNo) {
         //create a port that listens to the client
           this.portNo=port;
+
+        this.WAITING_CODE = 101; //to be used in notifyPatchAvailable()
+        this.DENIED_CODE = 102;
+        this.APPROVED_CODE = 103;
+
+        this.deviceQueue = new Queue();
+        this.deviceArray = [];  
+        this.app = express();
+        this.port = 3055;
+
     }
              
     sendData(parsedPatch){
@@ -155,20 +158,25 @@ class TicketManager {
 
     main() {
         console.log("Hello!");
-        manager = new TicketManager(3055);
+        // manager = new TicketManager(3055);
 
-        manager.sendData(this.parsedPatch);
+        // manager.sendData(this.parsedPatch);
         
-        this.removeDeviceFromQueue();
-        this.applyForTicket("Device1");
-        this.applyForTicket("Device2");
-        this.applyForTicket("Device3");
-        this.applyForTicket("Device4");
-        this.applyForTicket("Device5");
-        this.applyForTicket("Device1");
-        this.removeDeviceFromQueue();
-        this.removeDeviceFromQueue();
-        this.removeDeviceFromQueue();
-        this.displayDeviceArray();
+        // this.removeDeviceFromQueue();
+        // this.applyForTicket("Device1");
+        // this.applyForTicket("Device2");
+        // this.applyForTicket("Device3");
+        // this.applyForTicket("Device4");
+        // this.applyForTicket("Device5");
+        // this.applyForTicket("Device1");
+        // this.removeDeviceFromQueue();
+        // this.removeDeviceFromQueue();
+        // this.removeDeviceFromQueue();
+        // this.displayDeviceArray();
     }
 }
+
+// let newServer = new TicketManager(3000);
+
+
+
