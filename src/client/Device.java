@@ -1,19 +1,7 @@
-// This is the Device to simulate iot devices.
-
-// This is the client.
-
-// Pseudo Code
-// Connect to the socket, wait for a notification
-// while alive
-//     When notified of a patch, request ticket
-//     wait for ticket
-//     when provided a ticket, execute patch
-//     provide status updates for server
-
+package client;
 
 import java.net.*;
 import java.io.*;
-
 
 public  class Device {
 
@@ -32,7 +20,7 @@ public  class Device {
 
     public void startConnection() {
         try{
-            this.socket =  new Socket(this.IP, this.PORT);
+            this.socket =  new Socket(Device.IP, Device.PORT);
             this.out = new PrintWriter(this.socket.getOutputStream(), true);
             this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
@@ -56,5 +44,6 @@ public  class Device {
 
     public static void main(String[] args) throws Exception{
         Device device= new Device();
+        while(true) {}
     }
 }
