@@ -7,6 +7,7 @@ public final class Phone extends Device {
     private int x, y;
 
     public Phone() {
+        super("Jamie");
         this.x = 0;
         this.y = 0;
     }
@@ -33,7 +34,7 @@ public final class Phone extends Device {
     public static void main(String [] args) {
         Device phone = new Phone();
         
-        phone.startConnection();
+        // phone.connectDevice();
         phone.handleConnection();
     }
 }

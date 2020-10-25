@@ -2,6 +2,11 @@ package client;
 
 // File Name GreetingServer.java
 import java.net.*;
+import java.net.http.*;
+import java.net.http.HttpClient.Version;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandler;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.io.*;
 import org.json.*;
 
@@ -13,31 +18,36 @@ public abstract class Device {
     private final int SUCCESFUL_UPDATE = 202;
     private final int FAILED_UPDATE = 203;
 
-    // Socket Information
-    private static final String IP = "";
-    private static final int PORT = 2000;
+    // HTTP Client Information
+    private static final String HOST = "http://localhost:4000";
+    
 
     // Communication Channel
-    private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private String id;
+    private HttpClient client;
 
-    public void startConnection() {
-        try {
-            this.socket = new Socket(Device.IP, Device.PORT);
-            this.out = new PrintWriter(this.socket.getOutputStream(), true);
-            this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-        } catch (IOException ioexcept) {
-        }
+    public Device(String id) {
+        this.id = id;
+        this.client = HttpClient.newBuilder().version(Version.HTTP_2).build();
     }
 
-    public void endConnection() {
+    public boolean connectDevice() {
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(Device.HOST + "/registerDevice")).header("id", this.id).build();
         try {
-            this.in.close();
-            this.out.close();
-            this.socket.close();
-        } catch (IOException ioexcept) {
+            HttpResponse<String> response = this.client.send(request, BodyHandlers.ofString());
+            if(response.statusCode() == 701) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+
         }
+        return false;
+    }
+
+    public void disconnectDevice() {
+
     }
 
     public void handleConnection() {
@@ -76,8 +86,9 @@ public abstract class Device {
 
     private JSONObject readFromServer() {
         try {
-            String x = this.in.readLine();
-            return new JSONObject(x.substring(2, x.length()));
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(Device.HOST + "/getUpdateFile")).header("id", this.id).build();
+            HttpResponse<String> response = this.client.send(request, BodyHandlers.ofString());
+            return new JSONObject(response.body());
         } catch (Exception e) {
 
         }
@@ -85,7 +96,7 @@ public abstract class Device {
     }
 
     private void writeToServer(JSONObject json) {
-        this.out.println(json.toString());
+        
     }
 
     private int getCommand(JSONObject json) {
