@@ -2,12 +2,10 @@
 // TicketManager.main();
 // import './deviceQueue.js';
 
+// import './Queue.js'
 
-
-var deviceQueue = require('./deviceQueue.js');
-
-
-// import {* from './js'
+var Queue = require('./Queue.js');
+let deviceQueue = new Queue()
 
 var express = require('express');
 var app = express();
@@ -20,25 +18,33 @@ let tempvar = 7
 
 let updateFile = {'f':1, 'u': 2, 'c':3, 'k':4}
 
+
 app.get('/applyForTicket', function(req,res){
     // Check if device is in queue or is currently updating
     // If true, do not give it a ticket
     // Otherwise give it a ticket
-    if(getDeviceStatus(device) === 201 || isInQueue(device)){
-        return DENIED_CODE;
-    } else {
-        addDeviceToQueue(device);
-        return APPROVED_CODE;
+
+    if(deviceQueue.addDeviceToQueue(req.headers.id)) {
+        res.json({'code':deviceQueue.APPROVED_CODE});
+    }else {
+        res.json({'code':deviceQueue.DENIED_CODE});
     }
-    addDeviceToQueue(req.headers.id)
-    res.json({'code':103});
+
+    // if(getDeviceStatus(device) === 201 || isInQueue(device)){
+    //     return DENIED_CODE;
+    // } else {
+    //     addDeviceToQueue(device);
+    //     return APPROVED_CODE;
+    // }
+    // addDeviceToQueue(req.headers.id)
+    // 
 });
 
 
 app.get('/registerDevice', function(req,res){
-    if(!deviceInMasterList(req.headers.id)) {
+    if(!deviceQueue.deviceInMasterList(req.headers.id)) {
         // add device to master list
-        addDeviceToMasterList(req.headers.id);
+        deviceQueue.addDeviceToMasterList(req.headers.id);
         res.json({'code':701});
     } else {
         res.json({"code":702});
@@ -58,6 +64,10 @@ app.get('/getUpdateFile', function(req,res){
         res.json(hardBadUpdateFile);
     }
     tempvar += 1
+});
+
+app.get('/deviceUpdated', function(req,res){
+
 });
 
 
