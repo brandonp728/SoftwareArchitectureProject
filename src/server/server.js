@@ -54,7 +54,7 @@ app.get('/registerDevice', function(req,res){
 
 
 let hardUpdateFile = {'x':1, 'y': 2, 'c':3, 'k':4}
-let hardBadUpdateFile = {'f':1, 'u': 2, 'x':3, 'k':4}
+let hardBadUpdateFile = {'k':1, 'f': 2, 'x':3, 'u':4}
 app.get('/getUpdateFile', function(req,res){
     // res.send("Here is the damn update" + tempvar)
     let goodOrBad = Math.random() %2;
