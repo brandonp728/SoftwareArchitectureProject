@@ -16,7 +16,7 @@ app.get('/', function(req, res){
 
 let tempvar = 7
 
-let updateFile = {'f':1, 'u': 2, 'c':3, 'k':4}
+let updateFile = {'w':1, 'h': 2, 'a':3, 't':4}
 
 
 app.get('/applyForTicket', function(req,res){
