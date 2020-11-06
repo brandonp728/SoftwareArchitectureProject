@@ -69,17 +69,20 @@ let hardUpdateFile = {'x':1, 'y': 2, 'c':3, 'k':4}
 let hardBadUpdateFile = {'k':1, 'f': 2, 'x':3, 'u':4}
 app.get('/getUpdateFile', function(req,res){
     // res.send("Here is the damn update" + tempvar)
-    let goodOrBad = Math.random() %2;
-    if (goodOrBad == 1) {
+
+    if (deviceQueue.deviceInUpdateQueue(req.headers.id)) {
         res.json(hardUpdateFile);
     }else {
-        res.json(hardBadUpdateFile);
+        res.json({'code':702});
     }
-    tempvar += 1
 });
 
-app.get('/deviceUpdated', function(req,res){
+app.put('/deviceUpdated', function(req,res){
+    deviceQueue.removeDeviceFromQueue(req.headers.id);
+});
 
+app.get('/updateAvailable', function(req,res){
+    
 });
 
 

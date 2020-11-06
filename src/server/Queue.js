@@ -8,17 +8,20 @@ class Queue {
         this.WAITING_CODE    = 101;
         this.DENIED_CODE     = 102;
         this.APPROVED_CODE   = 103;
+
+        this.UPDATE_THRESHOLD_POLICY = 0.33
     }
 
     addDeviceToQueue(device) {
+        let deviceLimit = this.deviceMasterList.length * this.UPDATE_THRESHOLD_POLICY;
         if (this.deviceInMasterList(device)) {
-            if(this.deviceUpdateQueue.length < 10) {
+            if(this.deviceUpdateQueue.length < deviceLimit) {
                 for(let i = 0; i < this.deviceUpdateQueue.length; i++) {
                     if(device === this.deviceUpdateQueue[i].id) {
                         return true;
                     }
                 }
-                this.deviceUpdateQueue.push({"id":device,"status":this.WAITING_CODE});
+                this.deviceUpdateQueue.push({"id":device});
                 return true;
             }
             else {
@@ -32,13 +35,18 @@ class Queue {
         
     }
     
-    removeDeviceFromQueue() {
+    removeDeviceFromQueue(device) {
         if(this.deviceUpdateQueue.length == 0){
-            console.log("Device Queue underflow")
+            console.log("Device Queue underflow");
         }
-        else{
-            device = this.deviceUpdateQueue.pop();
-            this.getDeviceStatus(device);
+        else {
+            for(let i = 0; i < this.deviceUpdateQueue.length; i++) {
+                if(device === this.deviceUpdateQueue[i].id) {
+                    this.deviceInUpdateQueue.splice(i,1);
+                    console.log(device + " was removed from update queue!");
+                    break;
+                }
+            }
         }
     }
     
@@ -50,6 +58,15 @@ class Queue {
 
         for(let i = 0; i < this.deviceMasterList.length; i++) {
             if(device === this.deviceMasterList[i].id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    deviceInUpdateQueue(device) {
+        for(let i = 0; i < this.deviceUpdateQueue.length; i++) {
+            if(device === this.deviceUpdateQueue[i].id) {
                 return true;
             }
         }
