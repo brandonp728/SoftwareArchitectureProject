@@ -19,6 +19,19 @@ let tempvar = 7
 let updateFile = {'w':1, 'h': 2, 'a':3, 't':4}
 
 
+// Routes Needed
+// All the routes expect a device id to be submitted
+// POST Register & Unregister (way to detect device has disconnected)
+    // What devices exist on the network. Device submits its id.
+    // Device Manager will set the device id
+// POST/GET A way to apply for a ticket
+    // Devices continously poll for a ticket until it recieves it (submit id, waiting for ticket response)
+// GET Requesting bspatch diff
+    // retrieve patch diff (we are only keeping track of the current and newer versions on the server side).
+    // return bspath diff
+// POST bspatch result/status (did it work or not)
+    // Submit device id and status code
+
 app.get('/applyForTicket', function(req,res){
     // Check if device is in queue or is currently updating
     // If true, do not give it a ticket
@@ -49,7 +62,6 @@ app.get('/registerDevice', function(req,res){
     } else {
         res.json({"code":702});
     }
-    
 });
 
 
