@@ -17,7 +17,7 @@ class Queue {
         if (this.deviceInMasterList(device)) {
             if(this.deviceUpdateQueue.length < deviceLimit) {
                 for(let i = 0; i < this.deviceUpdateQueue.length; i++) {
-                    if(device === this.deviceUpdateQueue[i].id) {
+                    if(device === this.deviceUpdateQueue[i]["id"]) {
                         return true;
                     }
                 }
@@ -41,7 +41,7 @@ class Queue {
         }
         else {
             for(let i = 0; i < this.deviceUpdateQueue.length; i++) {
-                if(device === this.deviceUpdateQueue[i].id) {
+                if(device === this.deviceUpdateQueue[i]["id"]) {
                     this.deviceInUpdateQueue.splice(i,1);
                     console.log(device + " was removed from update queue!");
                     break;
@@ -57,7 +57,7 @@ class Queue {
     deviceInMasterList(device) {
 
         for(let i = 0; i < this.deviceMasterList.length; i++) {
-            if(device === this.deviceMasterList[i].id) {
+            if(device === this.deviceMasterList[i]["id"]) {
                 return true;
             }
         }
@@ -66,7 +66,7 @@ class Queue {
 
     deviceInUpdateQueue(device) {
         for(let i = 0; i < this.deviceUpdateQueue.length; i++) {
-            if(device === this.deviceUpdateQueue[i].id) {
+            if(device === this.deviceUpdateQueue[i]["id"]) {
                 return true;
             }
         }
