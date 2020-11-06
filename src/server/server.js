@@ -4,7 +4,9 @@
 
 // import './Queue.js'
 
-const bsdiff = require('@brouilles/bsdiff-nodejs');
+const fs = require('fs');
+const path = require('path');
+const bsdiff = require('bsdiff-nodejs');
 
 var Queue = require('./Queue.js');
 let deviceQueue = new Queue()
@@ -101,6 +103,19 @@ app.put('/deviceUpdated', function(req,res){
 app.get('/updateAvailable', function(req,res){
     
 });
+
+app.post('/needUpdate', function(req,res) {
+    const oldFile = path.join(__dirname, 'resources/react-native-zip-archive-5.0.1.zip');
+    const newFile = path.join(__dirname, 'resources/react-native-zip-archive-5.0.6.zip');
+    const patchFile = path.join(__dirname, 'resources/react.patch');
+
+    bsdiff.diff(oldFile, newFile, patchFile, function (result) {
+        console.log('diff:' + String(result).padStart(4) + '%');
+    });
+
+    // const file = patchFile;
+    res.download(patchFile); // Set disposition and send it.
+})
 
 
 app.listen(4000);
