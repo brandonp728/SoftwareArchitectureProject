@@ -1,5 +1,15 @@
 package client;
 
+// TODO: Add DeviceManager to start the device processes
+//
+// Connedt device to server
+    // Poll for updates - need edge point for general status updates
+    // When update exists, apply for ticket
+    // When provided ticket, request patch diff
+    // when handed patch diff, implement patch
+    // Push status update after patch implemented.
+    // Restart process
+
 // File Name GreetingServer.java
 import java.net.*;
 import java.net.http.*;
