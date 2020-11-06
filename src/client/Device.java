@@ -2,7 +2,7 @@ package client;
 
 // TODO: Add DeviceManager to start the device processes
 //
-// Connedt device to server
+// Connect device to server
     // Poll for updates - need edge point for general status updates
     // When update exists, apply for ticket
     // When provided ticket, request patch diff
