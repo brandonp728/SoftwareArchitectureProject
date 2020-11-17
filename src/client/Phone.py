@@ -24,5 +24,5 @@ class Phone(Device):
 
 
 if __name__ == "__main__":
-    phone = Phone(79, 1)
+    phone = Phone(5, 1)
     phone.main()

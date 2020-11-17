@@ -48,7 +48,7 @@ class Device:
             if req.json()['code'] == 702:
                 return False
         except:
-            open('update.patch', 'wb').write(req.content)
+            open('resources/' + str(self.id) + '/update.patch', 'wb').write(req.content)
             return True
 
     def applyPatch(self):
@@ -57,7 +57,7 @@ class Device:
         # dst_path      -> new patched file
         # patch_path    -> patch to be applied
         try: 
-            bsdiff.file_patch('resources/' + self.id + '/1.zip', 'resources/' + self.id + '/2.zip', 'resources/' + self.id + '/update.patch')
+            bsdiff.file_patch('resources/' + str(self.id) + '/' + str(self.version) + '.zip', 'resources/' + str(self.id) + '/2.zip', 'resources/' + str(self.id) + '/update.patch')
             # All done!
             return True
         except:
