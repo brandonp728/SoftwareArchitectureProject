@@ -1,5 +1,11 @@
 # SoftwareArchitectureProject
 
+## Authors
+- Brandon Palonis
+- Elijah Cantella
+- Pratyush Karna
+- Aizaz Ul-Haq
+
 ## How to set up
 * Things you need: Node, Python, Javascript
 * Run `pip install bsdiff4`
