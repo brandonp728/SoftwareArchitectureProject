@@ -54,7 +54,7 @@ let updateFile = {'w':1, 'h': 2, 'a':3, 't':4}
 // If true, do not give it a ticket
 // Otherwise give it a ticket
 app.post('/applyForTicket', function(req,res){
-    console.log(req);
+    // console.log(req);
 
     id = req.body.id;
     version = req.body.version;
@@ -148,7 +148,7 @@ app.put('/deviceUpdated', function(req,res){
 app.get('/updateAvailable', function(req,res){
     let id = req.body.id;
     let version = req.body.version;
-    if(version !== currentVersion) {
+    if(version != currentVersion) {
         res.json({'code':deviceQueue.NEEDS_UPDATE_CODE});
     } else {
         res.json({'code':deviceQueue.NO_UPDATE_CODE});
