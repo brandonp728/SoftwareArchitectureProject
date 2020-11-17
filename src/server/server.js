@@ -18,8 +18,14 @@ let currentVersion = 1;
 
 
 
-var express = require('express');
-var app = express();
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
 
 app.get('/', function(req, res){
    res.send("Hello world!");
@@ -48,22 +54,30 @@ let updateFile = {'w':1, 'h': 2, 'a':3, 't':4}
 // If true, do not give it a ticket
 // Otherwise give it a ticket
 app.post('/applyForTicket', function(req,res){
-    console.log(req.headers.id);
+    console.log(req);
 
-    if(deviceQueue.addDeviceToQueue(req.headers.id)) {
-        res.json({'code':deviceQueue.APPROVED_CODE});
-    }else {
+    id = req.body.id;
+    version = req.body.version;
+
+    if(version == currentVersion){
         res.json({'code':deviceQueue.DENIED_CODE});
+    }else {
+        if(deviceQueue.addDeviceToQueue(id)) {
+            res.json({'code':deviceQueue.APPROVED_CODE});
+        }else {
+            res.json({'code':deviceQueue.DENIED_CODE});
+        }
     }
+    
 });
 
 
 app.post('/registerDevice', function(req,res){
-    console.log(req.headers.id);
+    var id = req.body.id
 
-    if(!deviceQueue.deviceInMasterList(req.headers.id)) {
+    if(!deviceQueue.deviceInMasterList(id)) {
         // add device to master list
-        deviceQueue.addDeviceToMasterList(req.headers.id);
+        deviceQueue.addDeviceToMasterList(id);
         res.json({'code':deviceQueue.ADDED_CODE});
     } else {
         res.json({"code":deviceQueue.REJECTED_CODE});
@@ -91,9 +105,12 @@ let hardBadUpdateFile = {'k':1, 'f': 2, 'x':3, 'u':4}
 app.get('/getUpdateFile', function(req,res){
     console.log(deviceQueue.deviceMasterList);
     console.log(deviceQueue.deviceUpdateQueue);
-    if (req.headers.id) {
-        if (deviceQueue.deviceInUpdateQueue(req.headers.id)) {
-            let deviceVersion = req.headers.version;
+
+    var id = req.body.id
+
+    if (id) {
+        if (deviceQueue.deviceInUpdateQueue(id)) {
+            let deviceVersion = req.body.version;
             let patchFileName = deviceVersion+"-"+currentVersion+'-update.patch';
 
             if (patchFileName in patchFilesPaths) {
@@ -125,12 +142,12 @@ app.get('/getUpdateFile', function(req,res){
 });
 
 app.put('/deviceUpdated', function(req,res){
-    deviceQueue.removeDeviceFromQueue(req.headers.id);
+    deviceQueue.removeDeviceFromQueue(req.body.id);
 });
 
 app.get('/updateAvailable', function(req,res){
-    let id = req.headers.id;
-    let version = req.headers.version;
+    let id = req.body.id;
+    let version = req.body.version;
     if(version !== currentVersion) {
         res.json({'code':deviceQueue.NEEDS_UPDATE_CODE});
     } else {
@@ -141,11 +158,12 @@ app.get('/updateAvailable', function(req,res){
 
 
 app.post('/needUpdate', function(req,res) {
-    let newVersion = req.headers.version;
+    let newVersion = req.body.version;
 
     currentVersion = newVersion;
     res.json({'code':701});
 })
+
 
 
 app.listen(4000);
