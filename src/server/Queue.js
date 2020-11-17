@@ -9,6 +9,12 @@ class Queue {
         this.DENIED_CODE     = 102;
         this.APPROVED_CODE   = 103;
 
+        this.NEEDS_UPDATE_CODE  = 601;
+        this.NO_UPDATE_CODE     = 602;
+
+        this.ADDED_CODE      = 701;
+        this.REJECTED_CODE   = 702;
+
         this.UPDATE_THRESHOLD_POLICY = 0.33
     }
 

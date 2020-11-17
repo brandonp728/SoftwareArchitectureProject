@@ -10,6 +10,13 @@ const bsdiff = require('bsdiff-nodejs');
 
 var Queue = require('./Queue.js');
 let deviceQueue = new Queue()
+// let globalVersion = "1.0.0";
+let currentFirmwareFilePath = "react-native-zip-archive-5.0.1.zip"
+let patchFilesPaths = {}
+
+let currentVersion = 1;
+
+
 
 var express = require('express');
 var app = express();
@@ -21,6 +28,7 @@ app.get('/', function(req, res){
 let tempvar = 7
 
 let updateFile = {'w':1, 'h': 2, 'a':3, 't':4}
+
 
 
 // Routes Needed
@@ -36,12 +44,10 @@ let updateFile = {'w':1, 'h': 2, 'a':3, 't':4}
 // POST bspatch result/status (did it work or not)
     // Submit device id and status code
 
-app.post('/applyForTicket', function(req,res){
     // Check if device is in queue or is currently updating
-    // If true, do not give it a ticket
-    // Otherwise give it a ticket
-
-    // console.log(req.body);
+// If true, do not give it a ticket
+// Otherwise give it a ticket
+app.post('/applyForTicket', function(req,res){
     console.log(req.headers.id);
 
     if(deviceQueue.addDeviceToQueue(req.headers.id)) {
@@ -49,50 +55,72 @@ app.post('/applyForTicket', function(req,res){
     }else {
         res.json({'code':deviceQueue.DENIED_CODE});
     }
-
-    // if(getDeviceStatus(device) === 201 || isInQueue(device)){
-    //     return DENIED_CODE;
-    // } else {
-    //     addDeviceToQueue(device);
-    //     return APPROVED_CODE;
-    // }
-    // addDeviceToQueue(req.headers.id)
-    // 
 });
 
 
 app.post('/registerDevice', function(req,res){
-
-    // console.log(req);
     console.log(req.headers.id);
-
 
     if(!deviceQueue.deviceInMasterList(req.headers.id)) {
         // add device to master list
         deviceQueue.addDeviceToMasterList(req.headers.id);
-        res.json({'code':701});
+        res.json({'code':deviceQueue.ADDED_CODE});
     } else {
-        res.json({"code":702});
+        res.json({"code":deviceQueue.REJECTED_CODE});
     }
 });
 
 
 let hardUpdateFile = {'x':1, 'y': 2, 'c':3, 'k':4}
 let hardBadUpdateFile = {'k':1, 'f': 2, 'x':3, 'u':4}
-app.get('/getUpdateFile', function(req,res){
-    // res.send("Here is the damn update" + tempvar)
 
+
+// app.get('/getUpdateFile', function(req,res){
+//     console.log(deviceQueue.deviceMasterList);
+//     console.log(deviceQueue.deviceUpdateQueue);
+//     if (req.headers.id) {
+//         if (deviceQueue.deviceInUpdateQueue(req.headers.id)) {
+//             res.json(hardUpdateFile);
+//         }else {
+//             res.json({'code':deviceQueue.REJECTED_CODE});
+//         }
+//     }
+// });
+
+
+app.get('/getUpdateFile', function(req,res){
     console.log(deviceQueue.deviceMasterList);
     console.log(deviceQueue.deviceUpdateQueue);
     if (req.headers.id) {
         if (deviceQueue.deviceInUpdateQueue(req.headers.id)) {
-            res.json(hardUpdateFile);
+            let deviceVersion = req.headers.version;
+            let patchFileName = deviceVersion+"-"+currentVersion+'-update.patch';
+
+            if (patchFileName in patchFilesPaths) {
+                console.log("found existing patch. sending that");
+                res.download(patchFilesPaths[patchFileName])
+            }else {
+                console.log("generating patch file");
+                let oldFile = path.join(__dirname, 'resources/' + deviceVersion + '.zip');
+                let newFile = path.join(__dirname, 'resources/' + currentVersion + '.zip');
+                
+                let patchFileName = deviceVersion+"-"+currentVersion+'-update.patch';
+                let  patchFile = path.join(__dirname, 'resources/'+ patchFileName);
+                patchFilesPaths[patchFileName] = patchFile
+
+                bsdiff.diff(oldFile, newFile, patchFile, function (result) {
+                    console.log('diff:' + String(result).padStart(4) + '%');
+                });
+
+                res.download(patchFile);
+            }
         }else {
-            res.json({'code':702});
+            res.json({'code':deviceQueue.REJECTED_CODE});
         }
     }
 
     
+
 
 });
 
@@ -101,20 +129,22 @@ app.put('/deviceUpdated', function(req,res){
 });
 
 app.get('/updateAvailable', function(req,res){
-    
+    let id = req.headers.id;
+    let version = req.headers.version;
+    if(version !== currentVersion) {
+        res.json({'code':deviceQueue.NEEDS_UPDATE_CODE});
+    } else {
+        res.json({'code':deviceQueue.NO_UPDATE_CODE});
+    }
 });
 
+
+
 app.post('/needUpdate', function(req,res) {
-    const oldFile = path.join(__dirname, 'resources/react-native-zip-archive-5.0.1.zip');
-    const newFile = path.join(__dirname, 'resources/react-native-zip-archive-5.0.6.zip');
-    const patchFile = path.join(__dirname, 'resources/react.patch');
+    let newVersion = req.headers.version;
 
-    bsdiff.diff(oldFile, newFile, patchFile, function (result) {
-        console.log('diff:' + String(result).padStart(4) + '%');
-    });
-
-    // const file = patchFile;
-    res.download(patchFile); // Set disposition and send it.
+    currentVersion = newVersion;
+    res.json({'code':701});
 })
 
 
