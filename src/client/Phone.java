@@ -32,9 +32,14 @@ public final class Phone extends Device {
     }
 
     public static void main(String [] args) {
-        Device phone = new Phone();
-        
-        // phone.connectDevice();
-        phone.handleConnection();
+        Device phone = new Phone("69 LOL", "0.1.5");
+        // Connect to the server
+        phone.connectDevice();
+        // Apply for a ticket
+        phone.applyForTicket();
+        if(phone.isUpdateAvailable() && phone.getUpdateFile()) {
+            // implement bspatch so we can install the update patch file
+            phone.applyPatch();
+        }
     }
 }
