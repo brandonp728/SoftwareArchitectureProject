@@ -142,7 +142,9 @@ app.get('/getUpdateFile', function(req,res){
 });
 
 app.put('/deviceUpdated', function(req,res){
-    deviceQueue.removeDeviceFromQueue(req.body.id);
+    let id = req.body.id;
+    deviceQueue.removeDeviceFromQueue(id);
+    res.json({'code':701});
 });
 
 app.get('/updateAvailable', function(req,res){
@@ -158,8 +160,8 @@ app.get('/updateAvailable', function(req,res){
 
 
 app.post('/needUpdate', function(req,res) {
-    let newVersion = req.body.version;
-
+    let newVersion = req.headers.version;
+    console.log("New version received "+ newVersion)
     currentVersion = newVersion;
     res.json({'code':701});
 })

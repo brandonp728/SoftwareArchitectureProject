@@ -51,16 +51,29 @@ class Device:
             open('resources/' + str(self.id) + '/update.patch', 'wb').write(req.content)
             return True
 
+    def confirmUpdate(self):
+        self.version = self.version + 1
+        reg_dev = self.HOST + '/deviceUpdated'
+        req = requests.put(reg_dev, data={'id': self.id, 'version':self.version})
+        if req.json()['code'] == 701:
+            return True
+        else:
+            return False
+
     def applyPatch(self):
         # Three params: src_path, dst_path, patch_path
         # src_path      -> file to be patched
         # dst_path      -> new patched file
         # patch_path    -> patch to be applied
+        print("applying patch")
         try: 
-            bsdiff.file_patch('resources/' + str(self.id) + '/' + str(self.version) + '.zip', 'resources/' + str(self.id) + '/2.zip', 'resources/' + str(self.id) + '/update.patch')
+            bsdiff.file_patch('./resources/' + str(self.id) + '/' + str(self.version) + '.zip', './resources/' + str(self.id) + '/' + str(self.version+1) + '.zip', './resources/' + str(self.id) + '/update.patch')
             # All done!
+            
             return True
-        except:
-            print("Something went wrong in the application of the patch!")
+        except Exception as e:
+            # print("Something went wrong in the application of the patch!")
+            print(e)
+            
             return False
 

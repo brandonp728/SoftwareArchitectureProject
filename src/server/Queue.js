@@ -48,7 +48,7 @@ class Queue {
         else {
             for(let i = 0; i < this.deviceUpdateQueue.length; i++) {
                 if(device === this.deviceUpdateQueue[i]["id"]) {
-                    this.deviceInUpdateQueue.splice(i,1);
+                    this.deviceUpdateQueue.splice(i,1);
                     console.log(device + " was removed from update queue!");
                     break;
                 }
